@@ -77,6 +77,11 @@
 
   /* Evita que el navegador pinte controles en claro */
   color-scheme: dark;
+
+  /* ---------- Tipografía ---------- */
+  --sc-font-title: 'Fraunces', Georgia, serif;
+  --sc-font-body: 'DM Sans', system-ui, sans-serif;
+  --ion-font-family: var(--sc-font-body);
 }
 
 /* Permite usar color="tertiary" en los componentes de Ionic */
