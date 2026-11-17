@@ -1,2 +1,2 @@
-export * from './ingredientes.mock';
-export * from './recetas.mock';
+export * from './ingredientes';
+export * from './recetas';
