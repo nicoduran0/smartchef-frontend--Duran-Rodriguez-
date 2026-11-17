@@ -1,4 +1,4 @@
-import { RecetaResumen } from './receta';
+import { RecetaResumen } from './receta.model';
 
 export interface Coleccion {
   id: number;

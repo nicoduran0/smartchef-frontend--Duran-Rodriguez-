@@ -1,2 +1,2 @@
-export * from './recetas';
-export * from './ingredientes';
+export * from './receta.service';
+export * from './ingrediente.service';

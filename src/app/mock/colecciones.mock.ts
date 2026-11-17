@@ -1,5 +1,5 @@
 import { Coleccion, RecetaResumen } from '../models';
-import { RECETAS_RESUMEN_MOCK } from './recetas';
+import { RECETAS_RESUMEN_MOCK } from './recetas.mock';
 
 /** Devuelve las recetas cuyos ids se indican, en ese orden. */
 function recetasPorIds(ids: number[]): RecetaResumen[] {
