@@ -7,3 +7,4 @@ export * from './coleccion';
 export * from './registro-comida';
 export * from './usuario';
 export * from './notificacion';
+export * from './pagina';
