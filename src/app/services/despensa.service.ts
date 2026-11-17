@@ -61,6 +61,18 @@ export class DespensaService {
     });
   }
 
+  /** Resta cantidad sin bajar de cero; si llega a 0, el ingrediente sale de la despensa (RN-07). */
+  restar(ingredienteId: number, cantidad: number): void {
+    const item = this.items.find(i => i.ingredienteId === ingredienteId);
+    if (!item) {
+      return;
+    }
+    item.cantidad = Math.max(0, Math.round((item.cantidad - cantidad) * 100) / 100);
+    if (item.cantidad === 0) {
+      this.items = this.items.filter(i => i.ingredienteId !== ingredienteId);
+    }
+  }
+
   /** Cantidad disponible de un ingrediente (0 si no hay o está caducado). */
   cantidadVigente(ingredienteId: number): number {
     const hoy = fechaRelativa(0);

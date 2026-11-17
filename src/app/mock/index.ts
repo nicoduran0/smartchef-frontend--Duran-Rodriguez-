@@ -6,3 +6,4 @@ export * from './despensa.mock';
 export * from './lista-compra.mock';
 export * from './colecciones.mock';
 export * from './registros.mock';
+export * from './notificaciones.mock';

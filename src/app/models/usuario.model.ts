@@ -16,3 +16,14 @@ export interface Usuario {
   telefono?: string;   // solo mockup
   avatarUrl?: string;  // solo mockup
 }
+
+export interface LoginRequest {
+  email: string;
+  password: string;
+}
+
+export interface RegistroUsuarioRequest {
+  nombre: string;
+  email: string;
+  password: string;
+}
