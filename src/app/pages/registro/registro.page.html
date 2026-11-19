@@ -1,0 +1,85 @@
+<ion-content class="auth-page ion-padding">
+  <div class="auth">
+    <ion-button fill="clear" size="small" routerLink="/bienvenida" class="auth-volver">
+      <ion-icon slot="start" name="arrow-back"></ion-icon>
+      Volver
+    </ion-button>
+
+    <h1 class="logo">Smart<span>Chef</span></h1>
+    <h2 class="auth-titulo">Crear cuenta</h2>
+    <p class="auth-subtitulo">Únete a la comunidad de cocina inteligente más grande.</p>
+
+    <form [formGroup]="form" (ngSubmit)="crearCuenta()" novalidate>
+      <ion-input label="Nombre completo" labelPlacement="stacked" fill="outline"
+                 placeholder="Nicolás Pérez" formControlName="nombre" autocomplete="name"></ion-input>
+      @if (invalido('nombre')) {
+        <p class="auth-error">Escribe tu nombre (mínimo 3 caracteres).</p>
+      }
+
+      <ion-input label="Correo electrónico" labelPlacement="stacked" fill="outline" type="email"
+                 placeholder="tucorreo@ejemplo.com" formControlName="email" autocomplete="email"></ion-input>
+      @if (invalido('email')) {
+        <p class="auth-error">
+          @if (form.controls.email.hasError('required')) { Escribe tu correo electrónico. }
+          @else { El correo no tiene un formato válido. }
+        </p>
+      }
+
+      <ion-input label="Contraseña" labelPlacement="stacked" fill="outline"
+                 placeholder="Crear contraseña" formControlName="password"
+                 [type]="verPassword() ? 'text' : 'password'" autocomplete="new-password">
+        <ion-button fill="clear" slot="end" type="button"
+                    aria-label="Mostrar u ocultar contraseña"
+                    (click)="verPassword.set(!verPassword())">
+          <ion-icon slot="icon-only" [name]="verPassword() ? 'eye-off-outline' : 'eye-outline'"></ion-icon>
+        </ion-button>
+      </ion-input>
+      @if (invalido('password')) {
+        <p class="auth-error">La contraseña debe tener al menos 8 caracteres.</p>
+      }
+
+      <ion-input label="Confirmar contraseña" labelPlacement="stacked" fill="outline"
+                 placeholder="Repite tu contraseña" formControlName="confirmar"
+                 [type]="verPassword() ? 'text' : 'password'" autocomplete="new-password"></ion-input>
+      @if (invalido('confirmar') && form.controls.confirmar.hasError('required')) {
+        <p class="auth-error">Repite tu contraseña.</p>
+      } @else if (noCoinciden()) {
+        <p class="auth-error">Las contraseñas no coinciden.</p>
+      }
+
+      <ion-checkbox formControlName="terminos" labelPlacement="end" class="auth-terminos">
+        Acepto los términos y condiciones de privacidad.
+      </ion-checkbox>
+      @if (invalido('terminos')) {
+        <p class="auth-error">Debes aceptar los términos para continuar.</p>
+      }
+
+      @if (error()) {
+        <p class="auth-error auth-error-grande">{{ error() }}</p>
+      }
+
+      <ion-button type="submit" expand="block" shape="round" color="primary" [disabled]="cargando()">
+        @if (cargando()) { <ion-spinner name="crescent"></ion-spinner> } @else { Crear cuenta }
+      </ion-button>
+    </form>
+
+    <p class="auth-separador"><span>o registrarse con</span></p>
+
+    <div class="auth-social">
+      <ion-button fill="outline" shape="round" type="button" class="btn-social" (click)="proximamente()">
+        <ion-icon slot="start" name="logo-google"></ion-icon> Google
+      </ion-button>
+      <ion-button fill="outline" shape="round" type="button" class="btn-social" (click)="proximamente()">
+        <ion-icon slot="start" name="logo-apple"></ion-icon> Apple
+      </ion-button>
+    </div>
+
+    @if (aviso()) {
+      <p class="auth-aviso">{{ aviso() }}</p>
+    }
+
+    <p class="auth-pie">
+      ¿Ya tienes cuenta? <a routerLink="/login">Inicia sesión</a>
+    </p>
+  </div>
+</ion-content>

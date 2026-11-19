@@ -1,0 +1,83 @@
+<ion-content class="auth-page ion-padding">
+  <div class="auth">
+    <ion-button fill="clear" size="small" routerLink="/bienvenida" class="auth-volver">
+      <ion-icon slot="start" name="arrow-back"></ion-icon>
+      Volver
+    </ion-button>
+
+    <h1 class="logo">Smart<span>Chef</span></h1>
+    <h2 class="auth-titulo">Bienvenido de nuevo</h2>
+
+    <form [formGroup]="form" (ngSubmit)="entrar()" novalidate>
+      <ion-input
+        label="Correo electrónico"
+        labelPlacement="stacked"
+        fill="outline"
+        type="email"
+        placeholder="ejemplo@correo.com"
+        formControlName="email"
+        autocomplete="email"
+      ></ion-input>
+      @if (invalido('email')) {
+        <p class="auth-error">
+          @if (form.controls.email.hasError('required')) { Escribe tu correo electrónico. }
+          @else { El correo no tiene un formato válido. }
+        </p>
+      }
+
+      <ion-input
+        label="Contraseña"
+        labelPlacement="stacked"
+        fill="outline"
+        placeholder="••••••••"
+        formControlName="password"
+        [type]="verPassword() ? 'text' : 'password'"
+        autocomplete="current-password"
+      >
+        <ion-button fill="clear" slot="end" type="button"
+                    aria-label="Mostrar u ocultar contraseña"
+                    (click)="verPassword.set(!verPassword())">
+          <ion-icon slot="icon-only" [name]="verPassword() ? 'eye-off-outline' : 'eye-outline'"></ion-icon>
+        </ion-button>
+      </ion-input>
+      @if (invalido('password')) {
+        <p class="auth-error">Escribe tu contraseña.</p>
+      }
+
+      <a class="auth-enlace" (click)="aviso.set('La recuperación de contraseña estará disponible próximamente.')">
+        ¿Olvidé mi contraseña?
+      </a>
+
+      @if (error()) {
+        <p class="auth-error auth-error-grande">{{ error() }}</p>
+      }
+
+      <ion-button type="submit" expand="block" shape="round" color="primary" [disabled]="cargando()">
+        @if (cargando()) { <ion-spinner name="crescent"></ion-spinner> } @else { Iniciar sesión }
+      </ion-button>
+    </form>
+
+    <p class="auth-separador"><span>o continuar con</span></p>
+
+    <div class="auth-social">
+      <ion-button fill="outline" shape="round" type="button" class="btn-social" (click)="proximamente()">
+        <ion-icon slot="start" name="logo-google"></ion-icon> Google
+      </ion-button>
+      <ion-button fill="outline" shape="round" type="button" class="btn-social" (click)="proximamente()">
+        <ion-icon slot="start" name="logo-apple"></ion-icon> Apple
+      </ion-button>
+    </div>
+
+    @if (aviso()) {
+      <p class="auth-aviso">{{ aviso() }}</p>
+    }
+
+    <p class="auth-pie">
+      ¿No tienes cuenta? <a routerLink="/registro">Regístrate</a>
+    </p>
+
+    <p class="auth-demo">
+      Cuenta de prueba: <strong>nduranrodriguez&#64;safareyes.es</strong> / <strong>{{ passwordDemo }}</strong>
+    </p>
+  </div>
+</ion-content>

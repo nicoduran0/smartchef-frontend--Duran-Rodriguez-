@@ -1,12 +1,18 @@
-import { Component } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Component, inject } from '@angular/core';
+import { Router } from '@angular/router';
 import { IonButton, IonContent } from '@ionic/angular';
 
 @Component({
   selector: 'app-bienvenida',
   templateUrl: './bienvenida.page.html',
   styleUrls: ['./bienvenida.page.scss'],
-  standalone: true,
-  imports: [IonContent, IonButton, RouterLink],
+  imports: [IonContent, IonButton],
 })
-export class BienvenidaPage {}
+export class BienvenidaPage {
+
+  private router = inject(Router);
+
+  ir(ruta: string): void {
+    this.router.navigateByUrl(ruta);
+  }
+}

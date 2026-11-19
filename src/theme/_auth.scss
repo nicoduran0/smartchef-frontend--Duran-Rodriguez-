@@ -1,0 +1,137 @@
+/* Estilos comunes de login y registro */
+
+.auth-page {
+  --background: var(--sc-bg);
+}
+
+/* Foto superior (solo el login) */
+.portada {
+  height: 28vh;
+  min-height: 160px;
+  background:
+    linear-gradient(to bottom, rgba(15, 36, 25, 0.1) 0%, var(--sc-bg) 100%),
+    url('https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=900&q=70')
+    center / cover no-repeat;
+}
+
+.auth {
+  max-width: 440px;
+  margin: 0 auto;
+  padding: 16px 20px 32px;
+
+  .logo {
+    margin: 8px 0 0;
+    font-family: var(--sc-font-title);
+    font-size: 2rem;
+
+    span { color: var(--sc-orange); }
+  }
+
+  ion-input {
+    margin-top: 16px;
+    --background: var(--sc-surface);
+    --border-color: var(--sc-surface-2);
+    --border-radius: 12px;
+    --color: var(--sc-text);
+    --highlight-color-focused: var(--sc-orange);
+  }
+
+  ion-button[type='submit'] {
+    margin-top: 20px;
+    font-weight: 700;
+    --padding-top: 20px;
+    --padding-bottom: 20px;
+  }
+}
+
+/* El login va centrado; los campos no, para que el texto se escriba a la izquierda */
+.auth-centrado {
+  .logo,
+  .auth-titulo {
+    text-align: center;
+  }
+}
+
+.auth-volver { margin-left: -12px; --color: var(--sc-text-muted); }
+.auth-titulo { margin: 16px 0 4px; font-size: 1.6rem; }
+.auth-subtitulo { margin: 0 0 8px; color: var(--sc-text-muted); }
+
+.auth-error {
+  margin: 6px 4px 0;
+  font-size: 0.8rem;
+  color: var(--ion-color-danger);
+}
+
+.auth-error-grande {
+  margin-top: 16px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: rgba(255, 90, 95, 0.12);
+  font-size: 0.9rem;
+}
+
+.auth-enlace {
+  display: block;
+  margin-top: 12px;
+  text-align: right;
+  font-size: 0.85rem;
+  color: var(--sc-orange);
+  cursor: pointer;
+}
+
+.auth-terminos {
+  margin-top: 16px;
+  font-size: 0.85rem;
+  --size: 20px;
+  --checkbox-background-checked: var(--sc-mint);
+  --border-color-checked: var(--sc-mint);
+  --checkmark-color: var(--sc-bg);
+}
+
+.auth-separador {
+  margin: 24px 0 12px;
+  text-align: center;
+  color: var(--sc-text-muted);
+  font-size: 0.85rem;
+
+  span { padding: 0 8px; }
+}
+
+.auth-social {
+  display: flex;
+  gap: 12px;
+
+  .btn-social {
+    flex: 1;
+    --color: var(--sc-text);
+    --border-color: var(--sc-surface-2);
+    --background: var(--sc-surface);
+  }
+}
+
+.auth-aviso {
+  margin-top: 12px;
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--sc-mint);
+}
+
+.auth-pie {
+  margin-top: 24px;
+  text-align: center;
+  color: var(--sc-text-muted);
+
+  a { color: var(--sc-orange); font-weight: 700; text-decoration: none; }
+}
+
+.auth-demo {
+  margin-top: 16px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: var(--sc-surface);
+  text-align: center;
+  font-size: 0.8rem;
+  color: var(--sc-text-muted);
+
+  strong { color: var(--sc-text); }
+}
