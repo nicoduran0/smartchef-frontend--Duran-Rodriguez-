@@ -1,0 +1,11 @@
+ion-tab-bar {
+  --background: var(--sc-surface);
+  --border: 1px solid var(--sc-surface-2);
+  padding-top: 6px;
+}
+
+ion-tab-button {
+  --color: var(--sc-text-muted);
+  --color-selected: var(--sc-orange);
+  font-size: 0.7rem;
+}
