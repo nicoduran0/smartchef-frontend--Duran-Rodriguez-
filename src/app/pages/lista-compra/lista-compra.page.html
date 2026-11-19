@@ -1,3 +1,49 @@
-﻿<ion-content class="ion-padding">
-  <h1>ListaCompra</h1>
+﻿<ion-header class="ion-no-border">
+  <ion-toolbar class="cabecera-lista">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/app/descubrir" text="" icon="arrow-back"></ion-back-button>
+    </ion-buttons>
+    <div class="titulo-wrap">
+      <h1>Lista de compras</h1>
+      <p>Para: <strong>{{ recetaOrigen }}</strong></p>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div class="contenedor">
+    @for (grupo of grupos(); track grupo.categoria) {
+      <section class="bloque-categoria">
+        <h2>{{ grupo.categoria }}</h2>
+        <div class="tarjeta-grupo">
+          @for (item of grupo.items; track item.id) {
+            <label class="fila-compra" [class.comprado]="item.comprado">
+              <ion-checkbox [checked]="item.comprado" (ionChange)="toggleComprado(item.id, $event.detail.checked)"></ion-checkbox>
+              <span class="nombre">{{ item.nombre }}</span>
+              <span class="cantidad">{{ formatearCantidad(item.cantidad, item.unidad) }}</span>
+            </label>
+          }
+        </div>
+      </section>
+    }
+  </div>
 </ion-content>
+
+<ion-footer class="ion-no-border">
+  <div class="pie-resumen">
+    <div class="datos-pie">
+      <div>
+        <strong>{{ lineas().length }} ingredientes en lista</strong>
+        <span>{{ pendientes() }} pendientes por comprar</span>
+      </div>
+      <div class="coste">
+        <small>COSTO ESTIMADO</small>
+        <strong>~ {{ costeEstimado | number:'1.2-2' }} €</strong>
+      </div>
+    </div>
+    <ion-button expand="block" fill="outline" color="primary" (click)="compartirLista()">
+      <ion-icon slot="start" name="share-social-outline"></ion-icon>
+      Compartir lista
+    </ion-button>
+  </div>
+</ion-footer>

@@ -1,10 +1,9 @@
-﻿import { Component, computed, inject, signal } from '@angular/core';
+﻿import { Component, computed, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { IonButton, IonContent, IonIcon, IonSearchbar, IonSpinner } from '@ionic/angular';
-import { AuthService } from '../../core';
+import { RECETAS_RESUMEN_MOCK, USUARIO_MOCK } from '../../mock';
 import { RecetaResumen } from '../../models';
-import { RecetaService } from '../../services';
-import { EstadoVacioComponent, RecetaTarjetaComponent } from '../../shared';
+import { CabeceraAccionesComponent, EstadoVacioComponent, RecetaTarjetaComponent } from '../../shared';
 
 type ClaveFiltro = 'vegetariana' | 'sinGluten' | 'rapida' | 'economica';
 
@@ -13,78 +12,80 @@ type ClaveFiltro = 'vegetariana' | 'sinGluten' | 'rapida' | 'economica';
   templateUrl: './descubrir.page.html',
   styleUrls: ['./descubrir.page.scss'],
   imports: [
-    RouterLink, IonContent, IonIcon, IonSearchbar, IonButton, IonSpinner,
-    RecetaTarjetaComponent, EstadoVacioComponent,
+    RouterLink,
+    IonContent,
+    IonButton,
+    IonIcon,
+    IonSearchbar,
+    IonSpinner,
+    RecetaTarjetaComponent,
+    EstadoVacioComponent,
+    CabeceraAccionesComponent,
   ],
 })
 export class DescubrirPage {
-
-  private auth = inject(AuthService);
-  private recetas = inject(RecetaService);
-
-  readonly chips: { clave: ClaveFiltro; etiqueta: string }[] = [
-    { clave: 'vegetariana', etiqueta: 'Vegetariano' },
-    { clave: 'sinGluten', etiqueta: 'Sin gluten' },
-    { clave: 'rapida', etiqueta: 'Rápido' },
-    { clave: 'economica', etiqueta: 'Económico' },
-  ];
-
-  nombre = computed(() => this.auth.usuario()?.nombre.split(' ')[0] ?? '');
-  inicial = computed(() => this.nombre().charAt(0).toUpperCase());
+  nombre = computed(() => USUARIO_MOCK.nombre.split(' ')[0]);
 
   texto = signal('');
+  buscando = signal(false);
+  cargando = signal(false);
+  mostrarTodas = signal(false);
+
+  chips: { clave: ClaveFiltro; etiqueta: string }[] = [
+    { clave: 'rapida', etiqueta: 'Rápida (< 30 min)' },
+    { clave: 'vegetariana', etiqueta: 'Vegetariana' },
+    { clave: 'economica', etiqueta: 'Económica' },
+    { clave: 'sinGluten', etiqueta: 'Sin gluten' },
+  ];
+
   filtros = signal<Record<ClaveFiltro, boolean>>({
-    vegetariana: false, sinGluten: false, rapida: false, economica: false,
+    vegetariana: false,
+    sinGluten: false,
+    rapida: false,
+    economica: false,
   });
-  verTodas = signal(false);
 
-  recomendada = signal<RecetaResumen | null>(null);
-  populares = signal<RecetaResumen[]>([]);
-  resultados = signal<RecetaResumen[]>([]);
-  cargando = signal(true);
+  hayBusqueda = computed(() => {
+    const f = this.filtros();
+    return this.texto().trim().length > 0 || f.vegetariana || f.sinGluten || f.rapida || f.economica;
+  });
 
-  /** true cuando hay texto, algún filtro activo o se pulsó "Ver todo". */
-  buscando = computed(
-    () => this.texto().trim() !== '' || this.verTodas() || Object.values(this.filtros()).some(Boolean),
-  );
+  resultados = computed<RecetaResumen[]>(() => {
+    const q = this.texto().trim().toLowerCase();
+    const f = this.filtros();
 
-  constructor() {
-    this.recetas.recomendada().subscribe(r => this.recomendada.set(r));
-    this.recetas.populares().subscribe(lista => {
-      this.populares.set(lista);
-      this.cargando.set(false);
+    return RECETAS_RESUMEN_MOCK.filter(r => {
+      if (q && !r.titulo.toLowerCase().includes(q) && !r.descripcion.toLowerCase().includes(q)) return false;
+      if (f.vegetariana && !r.vegetariana) return false;
+      if (f.sinGluten && !r.sinGluten) return false;
+      if (f.rapida && r.tiempoMinutos > 30) return false;
+      if (f.economica && r.costePorRacion > 5) return false;
+      return true;
     });
-  }
+  });
 
-  alEscribir(valor: string | null | undefined): void {
+  recomendada = computed<RecetaResumen | null>(() => this.resultados()[0] ?? null);
+
+  populares = computed<RecetaResumen[]>(() => {
+    const lista = this.resultados();
+    return this.mostrarTodas() ? lista : lista.slice(1);
+  });
+
+  alEscribir(valor: string | null | undefined) {
     this.texto.set(valor ?? '');
-    this.buscar();
   }
 
-  alternar(clave: ClaveFiltro): void {
-    this.filtros.update(f => ({ ...f, [clave]: !f[clave] }));
-    this.buscar();
+  alternar(clave: ClaveFiltro) {
+    this.filtros.update(actual => ({ ...actual, [clave]: !actual[clave] }));
   }
 
-  verTodo(): void {
-    this.verTodas.set(true);
-    this.buscar();
+  verTodo() {
+    this.mostrarTodas.set(true);
+    this.limpiar();
   }
 
-  limpiar(): void {
+  limpiar() {
     this.texto.set('');
-    this.verTodas.set(false);
     this.filtros.set({ vegetariana: false, sinGluten: false, rapida: false, economica: false });
-    this.resultados.set([]);
-  }
-
-  private buscar(): void {
-    if (!this.buscando()) {
-      this.resultados.set([]);
-      return;
-    }
-    this.recetas
-      .listar({ texto: this.texto(), ...this.filtros() }, 0, 50)
-      .subscribe(pagina => this.resultados.set(pagina.content));
   }
 }

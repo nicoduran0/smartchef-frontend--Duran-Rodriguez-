@@ -1,3 +1,100 @@
-<ion-content class="ion-padding">
-  <h1>Receta {{ id() }}</h1>
+<ion-header [translucent]="true" class="ion-no-border">
+  <ion-toolbar class="barra-flotante">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/app/descubrir" text="" icon="arrow-back"></ion-back-button>
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-button class="boton-circular" (click)="esFavorita.set(!esFavorita())">
+        <ion-icon slot="icon-only" [name]="esFavorita() ? 'heart' : 'heart-outline'"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  @if (receta(); as r) {
+    <div class="hero">
+      @if (r.portadaUrl) {
+        <img [src]="r.portadaUrl" [alt]="r.titulo" />
+      }
+      <div class="degradado"></div>
+    </div>
+
+    <div class="cuerpo">
+      <h1>{{ r.titulo }}</h1>
+
+      @if (r.valoracionMedia) {
+        <div class="bloque-estrellas">
+          <app-estrellas-valoracion [media]="r.valoracionMedia" [total]="r.numValoraciones"></app-estrellas-valoracion>
+        </div>
+      }
+
+      <div class="metricas">
+        <div class="metrica">
+          <ion-icon name="time-outline"></ion-icon>
+          <div>
+            <span class="etiqueta">TIEMPO</span>
+            <strong>{{ r.tiempoMinutos }} min</strong>
+          </div>
+        </div>
+        <div class="metrica">
+          <ion-icon name="person-outline"></ion-icon>
+          <div>
+            <span class="etiqueta">PORCIONES</span>
+            <strong>{{ r.raciones }} {{ r.raciones === 1 ? 'ración' : 'raciones' }}</strong>
+          </div>
+        </div>
+        <div class="metrica">
+          <ion-icon name="flame-outline"></ion-icon>
+          <div>
+            <span class="etiqueta">CALORÍAS</span>
+            <strong>{{ r.caloriasPorRacion }} kcal</strong>
+          </div>
+        </div>
+      </div>
+
+      <ion-segment [ngModel]="seccion()" (ngModelChange)="seccion.set($event)" mode="md">
+        <ion-segment-button value="ingredientes"><ion-label>Ingredientes</ion-label></ion-segment-button>
+        <ion-segment-button value="preparacion"><ion-label>Preparación</ion-label></ion-segment-button>
+      </ion-segment>
+
+      @if (seccion() === 'ingredientes') {
+        <div class="lista-ingredientes">
+          @for (ing of r.ingredientes; track ing.ingredienteId) {
+            <label class="fila-ingrediente">
+              <ion-checkbox
+                [checked]="estaMarcado(ing.ingredienteId)"
+                (ionChange)="toggleIngrediente(ing.ingredienteId, $event.detail.checked)"
+              ></ion-checkbox>
+              <span class="nombre">{{ ing.nombre }}</span>
+              <span class="cantidad">{{ formatearCantidad(ing.cantidad, ing.unidad) }}</span>
+            </label>
+          }
+        </div>
+      } @else {
+        <ol class="lista-pasos">
+          @for (paso of r.pasos; track paso.numero) {
+            <li><p>{{ paso.numero }}. {{ paso.descripcion }}</p></li>
+          }
+        </ol>
+      }
+    </div>
+  } @else {
+    <div class="estado-centro">
+      <app-estado-vacio icono="restaurant-outline" titulo="Receta no encontrada" texto="No existe ninguna receta con ese identificador.">
+        <ion-button routerLink="/app/descubrir">Volver a descubrir</ion-button>
+      </app-estado-vacio>
+    </div>
+  }
 </ion-content>
+
+@if (receta()) {
+  <ion-footer class="ion-no-border">
+    <div class="pie-accion">
+      <ion-button expand="block" color="primary" routerLink="/lista-compra" (click)="agregarALista()">
+        <ion-icon slot="start" name="basket-outline"></ion-icon>
+        Agregar a lista de compras
+      </ion-button>
+    </div>
+  </ion-footer>
+}

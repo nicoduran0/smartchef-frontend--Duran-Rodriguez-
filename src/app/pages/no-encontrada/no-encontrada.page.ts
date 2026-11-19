@@ -1,10 +1,12 @@
 ﻿import { Component } from '@angular/core';
-import { IonContent } from '@ionic/angular';
+import { RouterLink } from '@angular/router';
+import { IonButton, IonContent } from '@ionic/angular';
+import { EstadoVacioComponent } from '../../shared';
 
 @Component({
   selector: 'app-no-encontrada',
   templateUrl: './no-encontrada.page.html',
   styleUrls: ['./no-encontrada.page.scss'],
-  imports: [IonContent],
+  imports: [RouterLink, IonContent, IonButton, EstadoVacioComponent],
 })
 export class NoEncontradaPage {}

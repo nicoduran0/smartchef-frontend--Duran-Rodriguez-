@@ -1,3 +1,76 @@
-﻿<ion-content class="ion-padding">
-  <h1>Perfil</h1>
+﻿<ion-header class="ion-no-border">
+  <ion-toolbar class="barra-perfil">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/app/descubrir" text="" icon="arrow-back"></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div class="contenedor">
+    <header class="cabecera-perfil">
+      <h1>Tu Perfil:</h1>
+      <div class="avatar-bloque">
+        <div class="circulo-avatar">{{ inicial() }}</div>
+        <span>Edita tu imagen de perfil</span>
+      </div>
+    </header>
+
+    <div class="pestanas">
+      <button type="button" [class.activa]="pestana() === 'datos'" (click)="pestana.set('datos')">Datos</button>
+      <button type="button" [class.activa]="pestana() === 'recetas'" (click)="pestana.set('recetas')">Recetas realizadas</button>
+      <button type="button" [class.activa]="pestana() === 'ajustes'" (click)="pestana.set('ajustes')">Ajustes</button>
+    </div>
+
+    @if (pestana() === 'datos') {
+      <div class="formulario-datos">
+        <div class="campo"><label>Nombre completo</label><div class="caja-valor">{{ usuario.nombre }}</div></div>
+        <div class="campo"><label>Correo electrónico</label><div class="caja-valor">{{ usuario.email }}</div></div>
+        <div class="campo">
+          <label>Contraseña</label>
+          <div class="caja-valor con-icono">
+            <span>{{ verPassword() ? 'SmartChef2026' : '••••••••••••' }}</span>
+            <button type="button" (click)="verPassword.set(!verPassword())">
+              <ion-icon [name]="verPassword() ? 'eye-off-outline' : 'eye-outline'"></ion-icon>
+            </button>
+          </div>
+        </div>
+        <div class="campo"><label>Número de teléfono</label><div class="caja-valor">{{ usuario.telefono }}</div></div>
+      </div>
+    }
+
+    @if (pestana() === 'recetas') {
+      <div class="lista-historial">
+        @for (rec of recetasRealizadas; track rec.id) {
+          <a class="fila-receta" [routerLink]="['/receta', rec.id]">
+            <img [src]="rec.portadaUrl" [alt]="rec.titulo" />
+            <div>
+              <strong>{{ rec.titulo }}</strong>
+              <span>{{ rec.tiempoMinutos }} min · {{ rec.caloriasPorRacion }} kcal</span>
+            </div>
+          </a>
+        }
+      </div>
+    }
+
+    @if (pestana() === 'ajustes') {
+      <div class="fila-toggle">
+        <span>Modo oscuro</span>
+        <ion-toggle
+          [checked]="modoOscuro()"
+          (ionChange)="cambiarTema($event.detail.checked)"
+        ></ion-toggle>
+      </div>
+      <div class="bloque-ajustes">
+        <div class="fila-toggle"><span>Dieta vegetariana</span><ion-toggle [checked]="preferencias().vegetariana" (ionChange)="cambiarPreferencia('vegetariana', $event.detail.checked)"></ion-toggle></div>
+        <div class="fila-toggle"><span>Sin gluten</span><ion-toggle [checked]="preferencias().sinGluten" (ionChange)="cambiarPreferencia('sinGluten', $event.detail.checked)"></ion-toggle></div>
+        <div class="fila-toggle"><span>Priorizar recetas rápidas</span><ion-toggle [checked]="preferencias().rapida" (ionChange)="cambiarPreferencia('rapida', $event.detail.checked)"></ion-toggle></div>
+        <div class="fila-toggle"><span>Priorizar recetas económicas</span><ion-toggle [checked]="preferencias().economica" (ionChange)="cambiarPreferencia('economica', $event.detail.checked)"></ion-toggle></div>
+        <ion-button expand="block" fill="outline" color="danger" class="btn-salir" (click)="cerrarSesion()">
+          <ion-icon slot="start" name="log-out-outline"></ion-icon>
+          Cerrar sesión
+        </ion-button>
+      </div>
+    }
+  </div>
 </ion-content>

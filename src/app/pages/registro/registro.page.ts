@@ -1,77 +1,58 @@
 import { Component, inject, signal } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { RouterLink } from '@angular/router';
-import { IonButton, IonCheckbox, IonContent, IonIcon, IonInput, IonSpinner, NavController } from '@ionic/angular';
-import { addIcons } from 'ionicons';
-import { arrowBack, eyeOffOutline, eyeOutline, logoApple, logoGoogle } from 'ionicons/icons';
-import { AuthService, coincidenPasswords } from '../../core';
+import { AbstractControl, FormBuilder, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
+import { Router, RouterLink } from '@angular/router';
+import { IonButton, IonCheckbox, IonContent, IonIcon, IonInput, IonSpinner } from '@ionic/angular';
 
-type Campo = 'nombre' | 'email' | 'password' | 'confirmar' | 'terminos';
+function coincidenPasswords(group: AbstractControl): ValidationErrors | null {
+  const pass = group.get('password')?.value;
+  const confirmar = group.get('confirmar')?.value;
+  return pass === confirmar ? null : { noCoinciden: true };
+}
 
 @Component({
   selector: 'app-registro',
   templateUrl: './registro.page.html',
   styleUrls: ['./registro.page.scss'],
-  imports: [ReactiveFormsModule, RouterLink, IonContent, IonButton, IonInput, IonIcon, IonSpinner, IonCheckbox],
+  imports: [ReactiveFormsModule, RouterLink, IonContent, IonInput, IonCheckbox, IonButton, IonIcon, IonSpinner],
 })
 export class RegistroPage {
-
-  private fb = inject(FormBuilder);
-  private auth = inject(AuthService);
-  private nav = inject(NavController);
-
-  form = this.fb.nonNullable.group(
-    {
-      nombre: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(80)]],
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(8)]],
-      confirmar: ['', [Validators.required]],
-      terminos: [false, [Validators.requiredTrue]],
-    },
-    { validators: coincidenPasswords },
-  );
+  private readonly fb = inject(FormBuilder);
+  private readonly router = inject(Router);
 
   verPassword = signal(false);
   cargando = signal(false);
   error = signal<string | null>(null);
   aviso = signal<string | null>(null);
 
-  constructor() {
-    addIcons({ arrowBack, eyeOutline, eyeOffOutline, logoGoogle, logoApple });
+  form = this.fb.nonNullable.group(
+    {
+      nombre: ['', [Validators.required, Validators.minLength(2)]],
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.minLength(6)]],
+      confirmar: ['', [Validators.required]],
+      terminos: [false, [Validators.requiredTrue]],
+    },
+    { validators: coincidenPasswords }
+  );
+
+  invalido(campo: 'nombre' | 'email' | 'password' | 'confirmar' | 'terminos'): boolean {
+    const control = this.form.controls[campo];
+    return control.invalid && (control.dirty || control.touched);
   }
 
-  invalido(campo: Campo): boolean {
-    const c = this.form.controls[campo];
-    return c.invalid && (c.touched || c.dirty);
-  }
-
-  /** El error "no coinciden" es del grupo, no de un campo concreto. */
   noCoinciden(): boolean {
-    const c = this.form.controls.confirmar;
-    return this.form.hasError('noCoinciden') && (c.touched || c.dirty) && c.value !== '';
+    return this.form.hasError('noCoinciden') && this.form.controls.confirmar.touched;
   }
 
-  crearCuenta(): void {
+  proximamente() {
+    this.aviso.set('Acceso con redes sociales disponible próximamente.');
+  }
+
+  crearCuenta() {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
     }
-
-    this.cargando.set(true);
-    this.error.set(null);
-
-    const { nombre, email, password } = this.form.getRawValue();
-
-    this.auth.registro({ nombre, email, password }).subscribe({
-      next: () => this.nav.navigateRoot('/app/descubrir'),
-      error: (e: Error) => {
-        this.error.set(e.message);
-        this.cargando.set(false);
-      },
-    });
-  }
-
-  proximamente(): void {
-    this.aviso.set('El registro con Google y Apple estará disponible próximamente.');
+    this.router.navigateByUrl('/app/descubrir', { replaceUrl: true });
   }
 }

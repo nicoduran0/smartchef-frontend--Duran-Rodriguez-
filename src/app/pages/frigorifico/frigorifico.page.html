@@ -1,3 +1,96 @@
-﻿<ion-content class="ion-padding">
-  <h1>Frigorifico</h1>
+﻿<ion-header class="ion-no-border">
+  <ion-toolbar class="cabecera-nevera">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/app/ingredientes" text="" icon="arrow-back"></ion-back-button>
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-button class="btn-editar" (click)="modalAbierto.set(true)">
+        <ion-icon slot="start" name="add-outline"></ion-icon>
+        Añadir
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div class="contenedor">
+    <header class="titulo-bloque">
+      <h1>Mi Frigorífico</h1>
+      <p>Controla tu despensa y aprovecha lo que está por caducar.</p>
+    </header>
+
+    <!-- Resumen rápido -->
+    <div class="resumen-nevera">
+      <div class="dato">
+        <strong>{{ despensa().length }}</strong>
+        <span>Productos en stock</span>
+      </div>
+      <div class="separador"></div>
+      <div class="dato">
+        <strong class="alerta">{{ proximosACaducar() }}</strong>
+        <span>Caducan pronto</span>
+      </div>
+    </div>
+
+    <!-- Píldoras de categoría -->
+    <div class="barra-filtros">
+      @for (cat of categorias; track cat) {
+        <button type="button" class="pildora" [class.activa]="categoriaActiva() === cat" (click)="categoriaActiva.set(cat)">
+          {{ cat }}
+        </button>
+      }
+    </div>
+
+    @if (itemsFiltrados().length === 0) {
+      <app-estado-vacio icono="snow-outline" titulo="Sin alimentos aquí" texto="No tienes ingredientes en esta categoría.">
+        <ion-button color="primary" (click)="modalAbierto.set(true)">Añadir ingrediente</ion-button>
+      </app-estado-vacio>
+    } @else {
+      <div class="rejilla">
+        @for (item of itemsFiltrados(); track item.ingredienteId) {
+          <article class="tarjeta-alimento" [class.urgente]="item.caducaPronto">
+            <div class="cabecera-card">
+              <span class="badge-cat">{{ item.categoria }}</span>
+              <button type="button" class="btn-borrar" (click)="eliminarItem(item.ingredienteId)" aria-label="Eliminar">
+                <ion-icon name="trash-outline"></ion-icon>
+              </button>
+            </div>
+
+            <div class="centro-card">
+              <div class="icono-circulo">
+                <ion-icon name="snow-outline"></ion-icon>
+              </div>
+              <strong class="cantidad">{{ formatearCantidad(item.cantidad, item.unidad) }}</strong>
+            </div>
+
+            <div class="pie-card">
+              <h3>{{ item.nombre }}</h3>
+              <span class="caducidad" [class.pronto]="item.caducaPronto">
+                {{ item.caducaPronto ? '⚠ Caduca: ' : 'Caduca: ' }}{{ item.caducidad }}
+              </span>
+            </div>
+          </article>
+        }
+      </div>
+    }
+  </div>
+
+  <ion-modal [isOpen]="modalAbierto()" (didDismiss)="modalAbierto.set(false)" [initialBreakpoint]="0.45" [breakpoints]="[0, 0.45]">
+    <ng-template>
+      <ion-header class="ion-no-border"><ion-toolbar><ion-title>Añadir al frigorífico</ion-title></ion-toolbar></ion-header>
+      <ion-content class="ion-padding">
+        <ion-item lines="none" class="campo-modal">
+          <ion-select label="Ingrediente" labelPlacement="stacked" [ngModel]="nuevoIngredienteId()" (ngModelChange)="nuevoIngredienteId.set($event)">
+            @for (ing of catalogo; track ing.id) {
+              <ion-select-option [value]="ing.id">{{ ing.nombre }}</ion-select-option>
+            }
+          </ion-select>
+        </ion-item>
+        <ion-item lines="none" class="campo-modal">
+          <ion-input type="number" label="Cantidad" labelPlacement="stacked" [ngModel]="nuevaCantidad()" (ngModelChange)="nuevaCantidad.set(+$event)"></ion-input>
+        </ion-item>
+        <ion-button expand="block" color="primary" (click)="guardarNuevo()">Guardar en nevera</ion-button>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
 </ion-content>

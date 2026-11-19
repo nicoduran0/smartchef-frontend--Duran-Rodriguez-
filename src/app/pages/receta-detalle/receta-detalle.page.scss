@@ -1,0 +1,47 @@
+ion-toolbar.barra-flotante { --background: transparent; padding: 6px 8px 0; }
+ion-back-button, ion-button.boton-circular {
+  --background: rgba(15, 36, 25, 0.72);
+  --border-radius: 50%;
+  --padding-start: 0;
+  --padding-end: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+ion-back-button { --color: var(--sc-text); --icon-font-size: 20px; }
+ion-button.boton-circular { color: var(--sc-orange); font-size: 20px; }
+.estado-centro { height: 100%; display: grid; place-items: center; padding: 24px; }
+.hero {
+  position: relative; height: 280px; background: var(--sc-surface);
+  img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .degradado { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(15,36,25,0.4) 0%, transparent 45%, var(--sc-bg) 100%); }
+}
+.cuerpo {
+  position: relative; margin-top: -20px; padding: 0 20px 32px;
+  h1 { margin: 0 0 8px; font-size: 26px; line-height: 1.2; }
+}
+.bloque-estrellas { margin-bottom: 18px; }
+.metricas {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;
+  background: var(--sc-surface); border: 1px solid var(--sc-surface-2);
+  border-radius: 16px; padding: 14px 10px; margin-bottom: 20px;
+  .metrica {
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    ion-icon { font-size: 20px; color: var(--sc-mint); flex-shrink: 0; }
+    .etiqueta { display: block; font-size: 9px; font-weight: 700; color: var(--sc-text-muted); }
+    strong { display: block; font-size: 13px; }
+  }
+}
+ion-segment {
+  --background: transparent; border-bottom: 1px solid var(--sc-surface-2); margin-bottom: 16px;
+  ion-segment-button { --color: var(--sc-text-muted); --color-checked: var(--sc-mint); --indicator-color: var(--sc-mint); text-transform: none; font-weight: 700; }
+}
+.fila-ingrediente {
+  display: flex; align-items: center; gap: 12px; padding: 14px 4px; border-bottom: 1px solid var(--sc-surface-2); cursor: pointer;
+  ion-checkbox { --size: 20px; --checkbox-background: transparent; --checkbox-background-checked: var(--sc-mint); --border-color: var(--sc-surface-2); --border-color-checked: var(--sc-mint); --checkmark-color: var(--sc-bg); --border-radius: 6px; }
+  .nombre { flex: 1; font-size: 14px; }
+  .cantidad { font-size: 13px; font-weight: 600; color: var(--sc-text-muted); }
+}
+.lista-pasos { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 16px; p { margin: 0; font-size: 14px; line-height: 1.55; } }
+ion-footer { background: var(--sc-bg); border-top: 1px solid var(--sc-surface-2); }
+.pie-accion { padding: 12px 20px calc(12px + var(--ion-safe-area-bottom, 0px)); ion-button { --border-radius: 14px; font-weight: 700; text-transform: none; height: 48px; margin: 0; } }

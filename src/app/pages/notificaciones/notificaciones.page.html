@@ -1,3 +1,32 @@
-﻿<ion-content class="ion-padding">
-  <h1>Notificaciones</h1>
+﻿<ion-header class="ion-no-border">
+  <ion-toolbar class="cabecera-notif">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/app/descubrir" text="" icon="arrow-back"></ion-back-button>
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-button fill="clear" class="btn-leidas" (click)="marcarTodasLeidas()">Marcar leídas</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div class="contenedor">
+    <h1>Notificaciones</h1>
+    @if (notificaciones().length === 0) {
+      <app-estado-vacio icono="notifications-outline" titulo="Sin notificaciones" texto="No tienes avisos pendientes."></app-estado-vacio>
+    } @else {
+      <div class="lista-notif">
+        @for (item of notificaciones(); track item.id) {
+          <a class="tarjeta-notif" [class.no-leida]="!item.leida" [routerLink]="rutaDestino(item)">
+            <div class="icono"><ion-icon name="notifications-outline"></ion-icon></div>
+            <div class="texto">
+              <p>{{ item.mensaje }}</p>
+              <span>{{ item.creadaEn.replace('T', ' · ').slice(0, 18) }}</span>
+            </div>
+            @if (!item.leida) { <span class="punto"></span> }
+          </a>
+        }
+      </div>
+    }
+  </div>
 </ion-content>

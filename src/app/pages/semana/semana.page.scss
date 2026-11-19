@@ -1,1 +1,38 @@
-﻿/* estilos de semana */
+﻿.contenedor { padding: calc(16px + var(--ion-safe-area-top, 0px)) 20px 24px; }
+
+.cabecera {
+  margin-bottom: 18px;
+
+  .fila-titulo {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 6px;
+  }
+
+  h1 { margin: 0; font-size: 26px; }
+  p { margin: 0; font-size: 13px; color: var(--sc-text-muted); }
+}
+
+.selector-dias { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; margin-bottom: 22px; }
+.dia-chip {
+  display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 10px 4px; border-radius: 14px;
+  background: var(--sc-surface); border: 1px solid var(--sc-surface-2); color: var(--sc-text); cursor: pointer;
+  .nombre { font-size: 11px; color: var(--sc-text-muted); }
+  .num { font-size: 14px; font-weight: 700; }
+  &.activo { background: var(--sc-mint); border-color: var(--sc-mint); color: var(--sc-bg); .nombre { color: var(--sc-bg); font-weight: 600; } }
+}
+.bloque-comida { margin-bottom: 18px; h2 { margin: 0 0 8px; font-family: var(--sc-font-body); font-size: 11px; font-weight: 700; letter-spacing: 0.08em; color: var(--sc-text-muted); } }
+.tarjeta-comida {
+  display: flex; align-items: center; gap: 12px; background: var(--sc-surface); border: 1px solid var(--sc-surface-2);
+  border-radius: 16px; padding: 10px 14px 10px 10px; text-decoration: none; color: inherit;
+  img { width: 56px; height: 56px; border-radius: 12px; object-fit: cover; flex-shrink: 0; }
+  .info { flex: 1; min-width: 0; h3 { margin: 0 0 3px; font-size: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; } span { font-size: 12px; color: var(--sc-text-muted); } }
+  .btn-check { width: 28px; height: 28px; border-radius: 50%; border: 1.5px solid var(--sc-surface-2); background: transparent; color: var(--sc-text-muted); display: grid; place-items: center; cursor: pointer; &.marcado { border-color: var(--sc-mint); color: var(--sc-mint); } }
+}
+.btn-agregar { width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; padding: 16px; border-radius: 16px; background: transparent; border: 1px dashed var(--sc-surface-2); color: var(--sc-orange); font-size: 14px; font-weight: 600; cursor: pointer; }
+ion-footer { background: var(--sc-bg); border-top: 1px solid var(--sc-surface-2); }
+.pie-nutricion { padding: 12px 16px 14px; h3 { margin: 0 0 10px; font-size: 14px; } .anillos { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; } }
+.lista-elegir { display: flex; flex-direction: column; gap: 10px; }
+.opcion-receta { display: flex; align-items: center; gap: 12px; background: var(--sc-surface); border: 1px solid var(--sc-surface-2); border-radius: 12px; padding: 8px; color: var(--sc-text); text-align: left; cursor: pointer; img { width: 48px; height: 48px; border-radius: 8px; object-fit: cover; } strong { display: block; font-size: 14px; } small { color: var(--sc-text-muted); } }

@@ -1,3 +1,7 @@
-﻿<ion-content class="ion-padding">
-  <h1>NoEncontrada</h1>
+﻿<ion-content [fullscreen]="true">
+  <div class="centro">
+    <app-estado-vacio icono="restaurant-outline" titulo="404 · Página no encontrada" texto="La ruta que buscas no existe o se ha movido.">
+      <ion-button color="primary" routerLink="/app/descubrir">Volver al inicio</ion-button>
+    </app-estado-vacio>
+  </div>
 </ion-content>

@@ -1,3 +1,86 @@
-﻿<ion-content class="ion-padding">
-  <h1>Ingredientes</h1>
+﻿<ion-content [fullscreen]="true">
+  <div class="contenedor">
+    <header class="cabecera">
+      <div class="fila-titulo">
+        <h1>Buscar por ingredientes</h1>
+        <app-cabecera-acciones></app-cabecera-acciones>
+      </div>
+      <p>Dime qué tienes en tu nevera y te diré qué puedes preparar.</p>
+    </header>
+
+    <section class="caja-ingredientes">
+      <div class="chips">
+        @for (ing of ingredientesSeleccionados(); track ing.id) {
+          <button type="button" class="chip-ingrediente" (click)="quitarIngrediente(ing.id)">
+            <span>{{ ing.nombre }}</span>
+            <ion-icon name="close-circle-outline"></ion-icon>
+          </button>
+        }
+        <button type="button" class="chip-agregar" (click)="modalAbierto.set(true)">
+          <ion-icon name="add-outline"></ion-icon>
+          <span>Agregar</span>
+        </button>
+      </div>
+    </section>
+
+    <ion-button expand="block" color="secondary" class="btn-buscar" (click)="modalAbierto.set(true)">
+      <ion-icon slot="start" name="search-outline"></ion-icon>
+      Añadir más ingredientes
+    </ion-button>
+
+    <section class="resultados">
+      <h2>Recetas sugeridas ({{ propuestas().length }})</h2>
+
+      @if (propuestas().length === 0) {
+        <app-estado-vacio
+          icono="search-outline"
+          titulo="Sin coincidencias"
+          texto="Añade algún ingrediente para ver recetas sugeridas."
+        >
+          <ion-button color="secondary" (click)="cargarDesdeNevera()">Usar mi frigorífico</ion-button>
+        </app-estado-vacio>
+      } @else {
+        <div class="lista-sugeridas">
+          @for (item of propuestas(); track item.receta.id) {
+            <a class="tarjeta-sugerida" [routerLink]="['/receta', item.receta.id]">
+              <img [src]="item.receta.portadaUrl" [alt]="item.receta.titulo" loading="lazy" />
+              <div class="info">
+                <span class="badge-coincidencia">{{ item.porcentajeCoincidencia }}% de coincidencia</span>
+                <h3>{{ item.receta.titulo }}</h3>
+                <p [class.completo]="item.ingredientesFaltantes.length === 0">
+                  {{ textoFaltantes(item.ingredientesFaltantes) }}
+                </p>
+              </div>
+              <ion-icon class="flecha" name="chevron-forward-outline"></ion-icon>
+            </a>
+          }
+        </div>
+      }
+    </section>
+  </div>
+
+  <ion-modal [isOpen]="modalAbierto()" (didDismiss)="modalAbierto.set(false)" [initialBreakpoint]="0.65" [breakpoints]="[0, 0.65]">
+    <ng-template>
+      <ion-header class="ion-no-border">
+        <ion-toolbar><ion-title>Añadir ingrediente</ion-title></ion-toolbar>
+        <ion-toolbar>
+          <ion-searchbar placeholder="Buscar ingrediente..." [ngModel]="filtroIngrediente()" (ngModelChange)="filtroIngrediente.set($event)"></ion-searchbar>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding">
+        <ion-button expand="block" fill="outline" color="secondary" class="btn-nevera-modal" (click)="cargarDesdeNevera()">
+          <ion-icon slot="start" name="snow-outline"></ion-icon>
+          Cargar desde mi frigorífico
+        </ion-button>
+        <div class="lista-modal">
+          @for (ing of ingredientesDisponibles(); track ing.id) {
+            <button type="button" class="fila-modal" (click)="agregarIngrediente(ing.id)">
+              <span>{{ ing.nombre }}</span>
+              <small>{{ ing.categoria }}</small>
+            </button>
+          }
+        </div>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
 </ion-content>

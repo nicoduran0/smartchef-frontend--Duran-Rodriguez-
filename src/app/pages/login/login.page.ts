@@ -1,64 +1,44 @@
 import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { RouterLink } from '@angular/router';
-import { IonButton, IonContent, IonIcon, IonInput, IonSpinner, NavController } from '@ionic/angular';
-import { addIcons } from 'ionicons';
-import { arrowBack, eyeOffOutline, eyeOutline, logoApple, logoGoogle } from 'ionicons/icons';
-import { AuthService, PASSWORD_DEMO } from '../../core';
+import { Router, RouterLink } from '@angular/router';
+import { IonButton, IonContent, IonIcon, IonInput, IonSpinner } from '@ionic/angular';
+import { USUARIO_MOCK } from '../../mock';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.page.html',
   styleUrls: ['./login.page.scss'],
-  imports: [ReactiveFormsModule, RouterLink, IonContent, IonButton, IonInput, IonIcon, IonSpinner],
+  imports: [ReactiveFormsModule, RouterLink, IonContent, IonInput, IonButton, IonIcon, IonSpinner],
 })
 export class LoginPage {
+  private readonly fb = inject(FormBuilder);
+  private readonly router = inject(Router);
 
-  private fb = inject(FormBuilder);
-  private auth = inject(AuthService);
-  private nav = inject(NavController);
-
-  readonly passwordDemo = PASSWORD_DEMO;
-
-  form = this.fb.nonNullable.group({
-    email: ['', [Validators.required, Validators.email]],
-    password: ['', [Validators.required]],
-  });
-
+  passwordDemo = 'SmartChef2026';
   verPassword = signal(false);
   cargando = signal(false);
   error = signal<string | null>(null);
   aviso = signal<string | null>(null);
 
-  constructor() {
-    addIcons({ arrowBack, eyeOutline, eyeOffOutline, logoGoogle, logoApple });
-  }
+  form = this.fb.nonNullable.group({
+    email: [USUARIO_MOCK.email, [Validators.required, Validators.email]],
+    password: [this.passwordDemo, [Validators.required, Validators.minLength(6)]],
+  });
 
-  /** Muestra el error de un campo solo cuando el usuario ya lo ha tocado. */
   invalido(campo: 'email' | 'password'): boolean {
-    const c = this.form.controls[campo];
-    return c.invalid && (c.touched || c.dirty);
+    const control = this.form.controls[campo];
+    return control.invalid && (control.dirty || control.touched);
   }
 
-  entrar(): void {
+  proximamente() {
+    this.aviso.set('Acceso con redes sociales disponible próximamente.');
+  }
+
+  entrar() {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
     }
-
-    this.cargando.set(true);
-    this.error.set(null);
-
-    this.auth.login(this.form.getRawValue()).subscribe({
-      next: () => this.nav.navigateRoot('/app/descubrir'),
-      error: (e: Error) => {
-        this.error.set(e.message);
-        this.cargando.set(false);
-      },
-    });
-  }
-
-  proximamente(): void {
-    this.aviso.set('El acceso con Google y Apple estará disponible próximamente.');
+    this.router.navigateByUrl('/app/descubrir', { replaceUrl: true });
   }
 }

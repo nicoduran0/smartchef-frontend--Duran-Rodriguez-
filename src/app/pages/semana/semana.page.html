@@ -1,3 +1,113 @@
-﻿<ion-content class="ion-padding">
-  <h1>Semana</h1>
+﻿<ion-content [fullscreen]="true">
+  <div class="contenedor">
+    <header class="cabecera">
+      <div class="fila-titulo">
+        <h1>Mi semana</h1>
+        <app-cabecera-acciones></app-cabecera-acciones>
+      </div>
+      <p>Organiza tus platos diarios y mantén el control de tu salud.</p>
+    </header>
+
+    <div class="selector-dias">
+      @for (dia of dias; track dia.fecha) {
+        <button type="button" class="dia-chip" [class.activo]="fechaSeleccionada() === dia.fecha" (click)="fechaSeleccionada.set(dia.fecha)">
+          <span class="nombre">{{ dia.diaCorto }}</span>
+          <strong class="num">{{ dia.numero }}</strong>
+        </button>
+      }
+    </div>
+
+    <section class="bloque-comida">
+      <h2>DESAYUNO</h2>
+      @if (desayuno(); as item) {
+        <a class="tarjeta-comida" [routerLink]="item.recetaId ? ['/receta', item.recetaId] : null">
+          <img [src]="fotoDeReceta(item.recetaId)" [alt]="item.recetaTitulo ?? ''" />
+          <div class="info">
+            <h3>{{ item.recetaTitulo ?? item.descripcionLibre }}</h3>
+            <span>{{ item.calorias }} kcal</span>
+          </div>
+          <button type="button" class="btn-check" [class.marcado]="esCompletado(item.id)" (click)="toggleCompletado($event, item.id)">
+            <ion-icon name="checkmark-outline"></ion-icon>
+          </button>
+        </a>
+      } @else {
+        <button type="button" class="btn-agregar" (click)="momentoAgregando.set('DESAYUNO')">
+          <ion-icon name="add-circle-outline"></ion-icon>
+          <span>Agregar sugerencia de desayuno</span>
+        </button>
+      }
+    </section>
+
+    <section class="bloque-comida">
+      <h2>ALMUERZO</h2>
+      @if (almuerzo(); as item) {
+        <a class="tarjeta-comida" [routerLink]="item.recetaId ? ['/receta', item.recetaId] : null">
+          <img [src]="fotoDeReceta(item.recetaId)" [alt]="item.recetaTitulo ?? ''" />
+          <div class="info">
+            <h3>{{ item.recetaTitulo ?? item.descripcionLibre }}</h3>
+            <span>{{ item.calorias }} kcal</span>
+          </div>
+          <button type="button" class="btn-check" [class.marcado]="esCompletado(item.id)" (click)="toggleCompletado($event, item.id)">
+            <ion-icon name="checkmark-outline"></ion-icon>
+          </button>
+        </a>
+      } @else {
+        <button type="button" class="btn-agregar" (click)="momentoAgregando.set('COMIDA')">
+          <ion-icon name="add-circle-outline"></ion-icon>
+          <span>Agregar sugerencia de almuerzo</span>
+        </button>
+      }
+    </section>
+
+    <section class="bloque-comida">
+      <h2>CENA</h2>
+      @if (cena(); as item) {
+        <a class="tarjeta-comida" [routerLink]="item.recetaId ? ['/receta', item.recetaId] : null">
+          <img [src]="fotoDeReceta(item.recetaId)" [alt]="item.recetaTitulo ?? ''" />
+          <div class="info">
+            <h3>{{ item.recetaTitulo ?? item.descripcionLibre }}</h3>
+            <span>{{ item.calorias }} kcal</span>
+          </div>
+          <button type="button" class="btn-check" [class.marcado]="esCompletado(item.id)" (click)="toggleCompletado($event, item.id)">
+            <ion-icon name="checkmark-outline"></ion-icon>
+          </button>
+        </a>
+      } @else {
+        <button type="button" class="btn-agregar" (click)="momentoAgregando.set('CENA')">
+          <ion-icon name="add-circle-outline"></ion-icon>
+          <span>Agregar sugerencia de cena</span>
+        </button>
+      }
+    </section>
+  </div>
+
+  <ion-modal [isOpen]="momentoAgregando() !== null" (didDismiss)="momentoAgregando.set(null)" [initialBreakpoint]="0.6" [breakpoints]="[0, 0.6]">
+    <ng-template>
+      <ion-header class="ion-no-border"><ion-toolbar><ion-title>Elegir receta</ion-title></ion-toolbar></ion-header>
+      <ion-content class="ion-padding">
+        <div class="lista-elegir">
+          @for (rec of recetasDisponibles; track rec.id) {
+            <button type="button" class="opcion-receta" (click)="asignarReceta(rec)">
+              <img [src]="rec.portadaUrl" [alt]="rec.titulo" />
+              <div>
+                <strong>{{ rec.titulo }}</strong>
+                <small>{{ rec.caloriasPorRacion }} kcal · {{ rec.tiempoMinutos }} min</small>
+              </div>
+            </button>
+          }
+        </div>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
 </ion-content>
+
+<ion-footer class="ion-no-border">
+  <div class="pie-nutricion">
+    <h3>Progreso nutricional hoy</h3>
+    <div class="anillos">
+      <app-anillo-progreso [porcentaje]="totales().kcalPct" [valor]="totales().kcal + ' kcal'" etiqueta="Calorías" color="var(--sc-orange)"></app-anillo-progreso>
+      <app-anillo-progreso [porcentaje]="totales().protPct" [valor]="totales().prot + 'g'" etiqueta="Proteínas" color="var(--sc-mint)"></app-anillo-progreso>
+      <app-anillo-progreso [porcentaje]="totales().carbPct" [valor]="totales().carb + 'g'" etiqueta="Carbos" color="#ffc23d"></app-anillo-progreso>
+    </div>
+  </div>
+</ion-footer>

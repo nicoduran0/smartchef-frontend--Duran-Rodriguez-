@@ -1,82 +1,81 @@
-﻿<ion-content [fullscreen]="true" class="descubrir">
-  <div class="pagina">
-
+﻿<ion-content [fullscreen]="true">
+  <div class="contenedor">
     <header class="cabecera">
-      <div>
-        <p class="saludo">¡Hola, {{ nombre() }}! 👋</p>
+      <div class="saludo">
+        <span>¡Hola, {{ nombre() }}! 👋</span>
         <h1>¿Qué cocinamos hoy?</h1>
       </div>
 
-      <div class="acciones">
-        <a class="btn-nevera" routerLink="/app/ingredientes/frigorifico" aria-label="Mi frigorífico">
-          <ion-icon name="snow-outline"></ion-icon>
-        </a>
-        <a class="avatar" routerLink="/app/descubrir/perfil" aria-label="Mi perfil">{{ inicial() }}</a>
-      </div>
+      <app-cabecera-acciones></app-cabecera-acciones>
     </header>
 
     <ion-searchbar
       placeholder="Buscar recetas o ingredientes..."
-      [debounce]="300"
       [value]="texto()"
       (ionInput)="alEscribir($any($event).detail.value)"
       (ionClear)="alEscribir('')"
     ></ion-searchbar>
 
-    <div class="chips">
+    <div class="barra-chips">
       @for (chip of chips; track chip.clave) {
-        <button type="button" class="chip" [class.activo]="filtros()[chip.clave]" (click)="alternar(chip.clave)">
+        <button
+          type="button"
+          class="chip"
+          [class.activo]="filtros()[chip.clave]"
+          (click)="alternar(chip.clave)"
+        >
           {{ chip.etiqueta }}
         </button>
       }
     </div>
 
     @if (buscando()) {
-      <section>
-        <div class="seccion-cabecera">
+      <div class="centro"><ion-spinner color="primary"></ion-spinner></div>
+    } @else if (hayBusqueda()) {
+      <section class="bloque">
+        <div class="fila-seccion">
           <h2>Resultados ({{ resultados().length }})</h2>
           <a class="ver-todo" (click)="limpiar()">Limpiar</a>
         </div>
 
-        @if (resultados().length) {
-          <div class="rejilla">
-            @for (r of resultados(); track r.id) {
-              <app-receta-tarjeta [receta]="r" />
-            }
-          </div>
-        } @else {
+        @if (resultados().length === 0) {
           <app-estado-vacio
             icono="search-outline"
-            titulo="Sin resultados"
-            mensaje="Prueba con otras palabras o quita algún filtro."
+            titulo="Sin recetas"
+            texto="Prueba con otros filtros o términos de búsqueda."
           >
-            <ion-button fill="outline" shape="round" size="small" (click)="limpiar()">Quitar filtros</ion-button>
+            <ion-button (click)="limpiar()">Limpiar filtros</ion-button>
           </app-estado-vacio>
+        } @else {
+          <div class="rejilla-resultados">
+            @for (receta of resultados(); track receta.id) {
+              <app-receta-tarjeta [receta]="receta"></app-receta-tarjeta>
+            }
+          </div>
         }
       </section>
-    } @else if (cargando()) {
-      <div class="cargando"><ion-spinner name="crescent"></ion-spinner></div>
     } @else {
-      @if (recomendada(); as r) {
-        <section>
-          <div class="seccion-cabecera"><h2>Recomendado para ti</h2></div>
-          <app-receta-tarjeta [receta]="r" variante="grande" />
+      @if (recomendada(); as rec) {
+        <section class="bloque">
+          <h2>Recomendado para ti</h2>
+          <app-receta-tarjeta [receta]="rec" [destacada]="true"></app-receta-tarjeta>
         </section>
       }
 
-      <section>
-        <div class="seccion-cabecera">
+      <section class="bloque">
+        <div class="fila-seccion">
           <h2>Recetas populares</h2>
           <a class="ver-todo" (click)="verTodo()">Ver todo</a>
         </div>
 
         <div class="carrusel">
-          @for (r of populares(); track r.id) {
-            <app-receta-tarjeta [receta]="r" />
+          @for (receta of populares(); track receta.id) {
+            <div class="item-carrusel">
+              <app-receta-tarjeta [receta]="receta"></app-receta-tarjeta>
+            </div>
           }
         </div>
       </section>
     }
-
   </div>
 </ion-content>

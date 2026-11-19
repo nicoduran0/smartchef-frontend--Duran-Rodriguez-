@@ -1,3 +1,44 @@
-﻿<ion-content class="ion-padding">
-  <h1>Favoritos</h1>
+﻿<ion-content [fullscreen]="true">
+  <div class="contenedor">
+    <header class="cabecera">
+      <div class="fila-titulo">
+        <h1>Mis recetas</h1>
+        <app-cabecera-acciones></app-cabecera-acciones>
+      </div>
+      <p>Organiza y accede rápidamente a tus platos favoritos.</p>
+    </header>
+
+    <div class="barra-filtros">
+      @for (col of colecciones; track col.id) {
+        <button type="button" class="pildora" [class.activa]="activaId() === col.id" (click)="activaId.set(col.id)">
+          {{ col.esFavoritas ? 'Todas' : col.nombre }}
+        </button>
+      }
+    </div>
+
+    @if (recetasMostradas().length === 0) {
+      <app-estado-vacio icono="heart-outline" titulo="Colección vacía" texto="Aún no has guardado ninguna receta aquí.">
+        <ion-button routerLink="/app/descubrir">Explorar recetas</ion-button>
+      </app-estado-vacio>
+    } @else {
+      <div class="rejilla">
+        @for (receta of recetasMostradas(); track receta.id) {
+          <a class="tarjeta-fav" [routerLink]="['/receta', receta.id]">
+            <div class="foto">
+              @if (receta.portadaUrl) {
+                <img [src]="receta.portadaUrl" [alt]="receta.titulo" loading="lazy" />
+              } @else {
+                <ion-icon name="restaurant-outline"></ion-icon>
+              }
+            </div>
+            <div class="cuerpo">
+              <span class="badge">{{ nombreEtiqueta(receta.id) }}</span>
+              <h3>{{ receta.titulo }}</h3>
+              <span class="fecha">{{ receta.tiempoMinutos }} min · {{ receta.caloriasPorRacion }} kcal</span>
+            </div>
+          </a>
+        }
+      </div>
+    }
+  </div>
 </ion-content>
