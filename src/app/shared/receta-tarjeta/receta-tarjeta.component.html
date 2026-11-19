@@ -1,0 +1,30 @@
+<a class="tarjeta" [class.grande]="variante() === 'grande'" [routerLink]="['/receta', receta().id]">
+  <div class="foto">
+    @if (receta().portadaUrl) {
+      <img [src]="receta().portadaUrl" [alt]="receta().titulo" loading="lazy" />
+    } @else {
+      <ion-icon name="restaurant-outline" aria-hidden="true"></ion-icon>
+    }
+  </div>
+
+  <div class="cuerpo">
+    @if (variante() === 'grande') {
+      <div class="etiquetas">
+        <span class="etiqueta etiqueta-tiempo">{{ receta().tiempoMinutos }} min</span>
+        <span class="etiqueta etiqueta-dificultad">{{ dificultad() }}</span>
+      </div>
+    }
+
+    <h3>{{ receta().titulo }}</h3>
+
+    @if (variante() === 'grande') {
+      <p class="desc">{{ receta().descripcion }}</p>
+    } @else {
+      <p class="meta">
+        <ion-icon name="time-outline" aria-hidden="true"></ion-icon>
+        {{ receta().tiempoMinutos }} min ·
+        <span class="dificultad">{{ dificultad() }}</span>
+      </p>
+    }
+  </div>
+</a>

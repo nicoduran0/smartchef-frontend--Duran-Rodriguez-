@@ -1,0 +1,9 @@
+<div class="vacio">
+  <ion-icon [name]="icono()" aria-hidden="true"></ion-icon>
+  <h3>{{ titulo() }}</h3>
+  @if (mensaje()) {
+    <p>{{ mensaje() }}</p>
+  }
+  <!-- Aquí cada pantalla puede meter su propio botón -->
+  <ng-content />
+</div>

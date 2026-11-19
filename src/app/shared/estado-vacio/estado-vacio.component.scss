@@ -1,0 +1,13 @@
+.vacio {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 40px 24px;
+  text-align: center;
+  color: var(--sc-text-muted);
+
+  ion-icon { font-size: 2.6rem; color: var(--sc-mint); }
+  h3 { margin: 8px 0 0; color: var(--sc-text); font-family: var(--sc-font-title); }
+  p { margin: 0 0 8px; max-width: 280px; }
+}

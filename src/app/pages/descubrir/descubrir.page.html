@@ -1,3 +1,82 @@
-﻿<ion-content class="ion-padding">
-  <h1>Descubrir</h1>
+﻿<ion-content [fullscreen]="true" class="descubrir">
+  <div class="pagina">
+
+    <header class="cabecera">
+      <div>
+        <p class="saludo">¡Hola, {{ nombre() }}! 👋</p>
+        <h1>¿Qué cocinamos hoy?</h1>
+      </div>
+
+      <div class="acciones">
+        <a class="btn-nevera" routerLink="/app/ingredientes/frigorifico" aria-label="Mi frigorífico">
+          <ion-icon name="snow-outline"></ion-icon>
+        </a>
+        <a class="avatar" routerLink="/app/descubrir/perfil" aria-label="Mi perfil">{{ inicial() }}</a>
+      </div>
+    </header>
+
+    <ion-searchbar
+      placeholder="Buscar recetas o ingredientes..."
+      [debounce]="300"
+      [value]="texto()"
+      (ionInput)="alEscribir($any($event).detail.value)"
+      (ionClear)="alEscribir('')"
+    ></ion-searchbar>
+
+    <div class="chips">
+      @for (chip of chips; track chip.clave) {
+        <button type="button" class="chip" [class.activo]="filtros()[chip.clave]" (click)="alternar(chip.clave)">
+          {{ chip.etiqueta }}
+        </button>
+      }
+    </div>
+
+    @if (buscando()) {
+      <section>
+        <div class="seccion-cabecera">
+          <h2>Resultados ({{ resultados().length }})</h2>
+          <a class="ver-todo" (click)="limpiar()">Limpiar</a>
+        </div>
+
+        @if (resultados().length) {
+          <div class="rejilla">
+            @for (r of resultados(); track r.id) {
+              <app-receta-tarjeta [receta]="r" />
+            }
+          </div>
+        } @else {
+          <app-estado-vacio
+            icono="search-outline"
+            titulo="Sin resultados"
+            mensaje="Prueba con otras palabras o quita algún filtro."
+          >
+            <ion-button fill="outline" shape="round" size="small" (click)="limpiar()">Quitar filtros</ion-button>
+          </app-estado-vacio>
+        }
+      </section>
+    } @else if (cargando()) {
+      <div class="cargando"><ion-spinner name="crescent"></ion-spinner></div>
+    } @else {
+      @if (recomendada(); as r) {
+        <section>
+          <div class="seccion-cabecera"><h2>Recomendado para ti</h2></div>
+          <app-receta-tarjeta [receta]="r" variante="grande" />
+        </section>
+      }
+
+      <section>
+        <div class="seccion-cabecera">
+          <h2>Recetas populares</h2>
+          <a class="ver-todo" (click)="verTodo()">Ver todo</a>
+        </div>
+
+        <div class="carrusel">
+          @for (r of populares(); track r.id) {
+            <app-receta-tarjeta [receta]="r" />
+          }
+        </div>
+      </section>
+    }
+
+  </div>
 </ion-content>
