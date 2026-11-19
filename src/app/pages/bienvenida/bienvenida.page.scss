@@ -8,42 +8,15 @@
   background: url('/assets/img/bienvenida-fondo.jpg') center / cover no-repeat;
 }
 
-.contenido {
-  position: absolute;
-  inset: 0;
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 28px;
-  padding: 24px 24px calc(24px + env(safe-area-inset-bottom, 0px));
-  text-align: center;
-}
-
-.marca {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.logo-img {
-  width: min(70vw, 260px);
-  height: auto;
-}
-
-.eslogan {
-  margin: 6px 0 0;
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: #1f4031;
-  text-shadow: 0 1px 6px rgba(255, 255, 255, 0.7);
-}
-
+/* Los botones van debajo del eslogan de la imagen, como en Figma (~68 % de la altura) */
 .acciones {
+  position: absolute;
+  top: 68%;
+  left: 50%;
+  transform: translateX(-50%);
   display: flex;
   gap: 12px;
-  width: 100%;
+  width: calc(100% - 48px);
   max-width: 380px;
 
   ion-button {
