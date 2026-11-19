@@ -18,7 +18,6 @@
         "build": {
           "builder": "@angular/build:application",
           "options": {
-            "prebundle": false,
             "outputPath": {
               "base": "www",
               "browser": ""
