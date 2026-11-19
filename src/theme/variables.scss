@@ -16,8 +16,8 @@
   /* ---------- Primary = naranja ---------- */
   --ion-color-primary: #ff7a2f;
   --ion-color-primary-rgb: 255, 122, 47;
-  --ion-color-primary-contrast: #ffffff;
-  --ion-color-primary-contrast-rgb: 255, 255, 255;
+  --ion-color-primary-contrast: #0f2419;
+  --ion-color-primary-contrast-rgb: 15, 36, 25;
   --ion-color-primary-shade: #e06b29;
   --ion-color-primary-tint: #ff8744;
 
@@ -84,12 +84,18 @@
   --ion-font-family: var(--sc-font-body);
 }
 
-/* Permite usar color="tertiary" en los componentes de Ionic */
-.ion-color-tertiary {
-  --ion-color-base: var(--ion-color-tertiary);
-  --ion-color-base-rgb: var(--ion-color-tertiary-rgb);
-  --ion-color-contrast: var(--ion-color-tertiary-contrast);
-  --ion-color-contrast-rgb: var(--ion-color-tertiary-contrast-rgb);
-  --ion-color-shade: var(--ion-color-tertiary-shade);
-  --ion-color-tint: var(--ion-color-tertiary-tint);
+/* Clases de color: le dicen a cada componente de Ionic cuál es su color base */
+@mixin color-ionic($nombre) {
+  .ion-color-#{$nombre} {
+    --ion-color-base: var(--ion-color-#{$nombre});
+    --ion-color-base-rgb: var(--ion-color-#{$nombre}-rgb);
+    --ion-color-contrast: var(--ion-color-#{$nombre}-contrast);
+    --ion-color-contrast-rgb: var(--ion-color-#{$nombre}-contrast-rgb);
+    --ion-color-shade: var(--ion-color-#{$nombre}-shade);
+    --ion-color-tint: var(--ion-color-#{$nombre}-tint);
+  }
+}
+
+@each $nombre in primary, secondary, tertiary, success, warning, danger {
+  @include color-ionic($nombre);
 }

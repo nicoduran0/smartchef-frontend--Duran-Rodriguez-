@@ -1,19 +1,15 @@
-<ion-content [scrollY]="false" class="bienvenida">
+<ion-content [fullscreen]="true" [scrollY]="false" class="bienvenida">
   <div class="fondo"></div>
 
   <div class="contenido">
     <div class="marca">
-      <h1 class="logo">Smart<span>Chef</span></h1>
-      <p class="eslogan">Tu cocina inteligente, tus recetas deseadas</p>
+      <img class="logo-img" src="assets/img/logo.png" alt="SmartChef" />
+      <p class="eslogan">Tu cocina inteligente, tus recetas saludables.</p>
     </div>
 
     <div class="acciones">
-      <ion-button color="primary" shape="round" (click)="ir('/login')">
-        Iniciar sesión
-      </ion-button>
-      <ion-button color="secondary" shape="round" (click)="ir('/registro')">
-        Crear cuenta
-      </ion-button>
+      <ion-button color="primary" shape="round" (click)="ir('/login')">Iniciar sesión</ion-button>
+      <ion-button color="secondary" shape="round" (click)="ir('/registro')">Crear cuenta</ion-button>
     </div>
   </div>
 </ion-content>
