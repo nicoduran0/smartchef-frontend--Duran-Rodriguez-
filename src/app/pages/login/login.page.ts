@@ -1,7 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
-import { IonButton, IonContent, IonIcon, IonInput, IonSpinner } from '@ionic/angular';
+import { RouterLink } from '@angular/router';
+import { IonButton, IonContent, IonIcon, IonInput, IonSpinner, NavController } from '@ionic/angular';
 import { addIcons } from 'ionicons';
 import { arrowBack, eyeOffOutline, eyeOutline, logoApple, logoGoogle } from 'ionicons/icons';
 import { AuthService, PASSWORD_DEMO } from '../../core';
@@ -10,14 +10,13 @@ import { AuthService, PASSWORD_DEMO } from '../../core';
   selector: 'app-login',
   templateUrl: './login.page.html',
   styleUrls: ['./login.page.scss'],
-  standalone: true,
   imports: [ReactiveFormsModule, RouterLink, IonContent, IonButton, IonInput, IonIcon, IonSpinner],
 })
 export class LoginPage {
 
   private fb = inject(FormBuilder);
   private auth = inject(AuthService);
-  private router = inject(Router);
+  private nav = inject(NavController);
 
   readonly passwordDemo = PASSWORD_DEMO;
 
@@ -51,7 +50,7 @@ export class LoginPage {
     this.error.set(null);
 
     this.auth.login(this.form.getRawValue()).subscribe({
-      next: () => this.router.navigateByUrl('/home', { replaceUrl: true }),
+      next: () => this.nav.navigateRoot('/app/descubrir'),
       error: (e: Error) => {
         this.error.set(e.message);
         this.cargando.set(false);

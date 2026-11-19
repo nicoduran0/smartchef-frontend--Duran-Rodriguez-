@@ -1,7 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
-import { IonButton, IonCheckbox, IonContent, IonIcon, IonInput, IonSpinner } from '@ionic/angular';
+import { RouterLink } from '@angular/router';
+import { IonButton, IonCheckbox, IonContent, IonIcon, IonInput, IonSpinner, NavController } from '@ionic/angular';
 import { addIcons } from 'ionicons';
 import { arrowBack, eyeOffOutline, eyeOutline, logoApple, logoGoogle } from 'ionicons/icons';
 import { AuthService, coincidenPasswords } from '../../core';
@@ -12,14 +12,13 @@ type Campo = 'nombre' | 'email' | 'password' | 'confirmar' | 'terminos';
   selector: 'app-registro',
   templateUrl: './registro.page.html',
   styleUrls: ['./registro.page.scss'],
-  standalone: true,
   imports: [ReactiveFormsModule, RouterLink, IonContent, IonButton, IonInput, IonIcon, IonSpinner, IonCheckbox],
 })
 export class RegistroPage {
 
   private fb = inject(FormBuilder);
   private auth = inject(AuthService);
-  private router = inject(Router);
+  private nav = inject(NavController);
 
   form = this.fb.nonNullable.group(
     {
@@ -64,7 +63,7 @@ export class RegistroPage {
     const { nombre, email, password } = this.form.getRawValue();
 
     this.auth.registro({ nombre, email, password }).subscribe({
-      next: () => this.router.navigateByUrl('/home', { replaceUrl: true }),
+      next: () => this.nav.navigateRoot('/app/descubrir'),
       error: (e: Error) => {
         this.error.set(e.message);
         this.cargando.set(false);
